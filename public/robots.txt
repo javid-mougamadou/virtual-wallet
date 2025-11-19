@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://virtual-wallet.javid-space.cloud/sitemap.xml
