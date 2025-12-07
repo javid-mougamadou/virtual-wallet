@@ -38,8 +38,8 @@ describe('HeaderSection', () => {
     render(<HeaderSection {...baseProps} onCurrencyChange={onCurrencyChange} />);
 
     const select = screen.getByLabelText(/sélectionner la devise/i);
-    fireEvent.change(select, { target: { value: 'USD' } });
+    fireEvent.change(select, { target: { value: 'CAD' } });
 
-    expect(onCurrencyChange).toHaveBeenCalledWith('USD');
+    expect(onCurrencyChange).toHaveBeenCalledWith('CAD');
   });
 });

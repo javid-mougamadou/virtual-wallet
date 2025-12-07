@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Currency } from '../types';
+import { convertToEUR } from '../utils/format';
 
 type CreateCagnotteModalProps = {
   currency: Currency;
@@ -33,7 +34,9 @@ export const CreateCagnotteModal = ({
       return;
     }
 
-    onSubmit(name.trim(), amount);
+    // Convertir le montant saisi en EUR avant stockage
+    const amountInEUR = convertToEUR(amount, currency);
+    onSubmit(name.trim(), amountInEUR);
     setName('');
     setTargetAmount('');
     setError(null);

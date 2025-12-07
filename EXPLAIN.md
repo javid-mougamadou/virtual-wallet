@@ -47,7 +47,10 @@ Utility functions for managing virtual wallets:
 - Helper functions for wallet operations
 
 ### Formatting (`src/utils/format.ts`)
-- `formatAmount`: formats currency amounts with proper locale formatting (EUR, CAD, USD)
+- `formatAmount`: formats currency amounts with proper locale formatting (EUR, CAD)
+- `convertFromEUR`: converts amounts from EUR (storage currency) to display currency
+- `convertToEUR`: converts amounts from display currency to EUR (storage currency)
+- Exchange rate: 1 EUR = 1.61 CAD
 
 ## Data Flow
 

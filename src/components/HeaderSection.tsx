@@ -35,12 +35,11 @@ export const HeaderSection = ({
       <select
         className="select select-bordered w-full sm:w-auto"
         value={currency}
-        onChange={(e) => onCurrencyChange(e.target.value as Currency)}
+        onChange={(e: { target: { value: string } }) => onCurrencyChange(e.target.value as Currency)}
         aria-label="Sélectionner la devise"
       >
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
-        <option value="USD">USD</option>
       </select>
       <button type="button" className="btn w-full sm:w-auto" onClick={onToggleTheme}>
         {theme === 'dark' ? 'Mode clair' : 'Mode sombre'}

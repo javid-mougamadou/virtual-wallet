@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Cagnotte, EntryType, Currency } from '../types';
 import { usePersistentState } from '../hooks/usePersistentState';
+import { convertToEUR } from '../utils/format';
 
 type EntryFormProps = {
   cagnottes: Cagnotte[];
@@ -41,7 +42,9 @@ export const EntryForm = ({ cagnottes, currency, onSubmit }: EntryFormProps) => 
       return;
     }
 
-    onSubmit(selectedCagnotteId, entryType, parsedAmount, label.trim() || undefined);
+    // Convertir le montant saisi en EUR avant stockage
+    const amountInEUR = convertToEUR(parsedAmount, currency);
+    onSubmit(selectedCagnotteId, entryType, amountInEUR, label.trim() || undefined);
     setAmount('');
     setLabel('');
     setError(null);

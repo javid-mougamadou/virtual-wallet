@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Currency, EntryType } from '../../types';
+import { convertToEUR } from '../../utils/format';
 
 type QuickAddEntryFormProps = {
   cagnotteName: string;
@@ -28,7 +29,9 @@ export const QuickAddEntryForm = ({
       return;
     }
 
-    onAdd(entryType, parsedAmount, entryLabel.trim() || undefined);
+    // Convertir le montant saisi en EUR avant stockage
+    const amountInEUR = convertToEUR(parsedAmount, currency);
+    onAdd(entryType, amountInEUR, entryLabel.trim() || undefined);
   };
 
   return (

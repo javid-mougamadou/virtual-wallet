@@ -9,7 +9,7 @@ Virtual Wallet is a React Progressive Web App (PWA) designed to help you manage 
 - 📊 **Real-time Balance**: See current balance and target amount for each wallet
 - 📱 **PWA Support**: Install as a mobile app for offline access
 - 🌓 **Dark/Light Theme**: Toggle between dark and light themes
-- 💱 **Multi-currency**: Support for EUR, CAD, and USD
+- 💱 **Multi-currency**: Support for EUR and CAD with automatic conversion (1 EUR = 1.61 CAD)
 - 📈 **Entry History**: View complete history of all entries grouped by wallet
 - 🎨 **Modern UI**: Built with React, TypeScript, Tailwind CSS, and DaisyUI
 

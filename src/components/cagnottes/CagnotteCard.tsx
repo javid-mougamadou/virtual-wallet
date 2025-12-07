@@ -43,6 +43,7 @@ export const CagnotteCard = ({
           <CagnotteEditForm
             initialName={cagnotte.name}
             initialTargetAmount={cagnotte.targetAmount}
+            currency={currency}
             onSave={onSaveEdit}
             onCancel={onCancelEdit}
           />

@@ -9,11 +9,12 @@ describe('TotalSummary', () => {
     expect(screen.getByText(/2\s*500/)).toBeInTheDocument();
   });
 
-  it('affiche le montant formaté avec la devise', () => {
-    render(<TotalSummary totalAmount={1500.5} currency="USD" />);
-    // Le formatage utilise maximumFractionDigits: 0, donc 1500.5 devient 1501
-    // Format USD: $1,501
-    const amountText = screen.getByText(/\$1[,\s]?50[01]/);
+  it('affiche le montant formaté avec la devise CAD', () => {
+    render(<TotalSummary totalAmount={1000} currency="CAD" />);
+    // Le montant est stocké en EUR (1000), converti en CAD (1000 * 1.61 = 1610)
+    // Le formatage utilise maximumFractionDigits: 0
+    // Format CAD: 1 610 $ ou 1,610 $ selon la locale
+    const amountText = screen.getByText(/1[,\s]?610/);
     expect(amountText).toBeInTheDocument();
   });
 

@@ -58,6 +58,7 @@ export const CagnotteListView = ({
                     <CagnotteEditForm
                       initialName={cagnotte.name}
                       initialTargetAmount={cagnotte.targetAmount}
+                      currency={currency}
                       onSave={(name, target) => onSaveEdit(cagnotte.id, name, target)}
                       onCancel={onCancelEdit}
                     />

@@ -1,25 +1,33 @@
 import { useState } from 'react';
+import { Currency } from '../../types';
+import { convertFromEUR, convertToEUR } from '../../utils/format';
 
 type CagnotteEditFormProps = {
   initialName: string;
-  initialTargetAmount: number;
-  onSave: (name: string, targetAmount: number) => void;
+  initialTargetAmount: number; // Montant en EUR (stocké dans la base)
+  currency: Currency;
+  onSave: (name: string, targetAmount: number) => void; // targetAmount sera en EUR
   onCancel: () => void;
 };
 
 export const CagnotteEditForm = ({
   initialName,
   initialTargetAmount,
+  currency,
   onSave,
   onCancel,
 }: CagnotteEditFormProps) => {
   const [name, setName] = useState(initialName);
-  const [targetAmount, setTargetAmount] = useState(initialTargetAmount.toString());
+  // Convertir le montant initial (en EUR) vers la devise d'affichage
+  const initialAmountInCurrency = convertFromEUR(initialTargetAmount, currency);
+  const [targetAmount, setTargetAmount] = useState(initialAmountInCurrency.toString());
 
   const handleSubmit = () => {
     const target = parseFloat(targetAmount);
     if (name.trim() && !isNaN(target) && target > 0) {
-      onSave(name.trim(), target);
+      // Convertir le montant saisi en EUR avant stockage
+      const targetInEUR = convertToEUR(target, currency);
+      onSave(name.trim(), targetInEUR);
     }
   };
 
