@@ -36,6 +36,17 @@ export function usePersistentState<T>(
 
   const isResettingRef = useRef<boolean>(false);
 
+  const persist = (next: T) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    try {
+      window.localStorage.setItem(key, serialize(next));
+    } catch (error) {
+      console.warn(`Impossible de sérialiser la clé ${key} :`, error);
+    }
+  };
+
   useEffect(() => {
     if (typeof window === 'undefined') {
       return noop;
@@ -46,21 +57,20 @@ export function usePersistentState<T>(
       return noop;
     }
 
-    try {
-      window.localStorage.setItem(key, serialize(state));
-    } catch (error) {
-      console.warn(`Impossible de sérialiser la clé ${key} :`, error);
-    }
+    persist(state);
 
     return noop;
   }, [key, serialize, state]);
 
   const update = (value: Updater<T>) => {
     setState((prevState) => {
-      if (typeof value === 'function') {
-        return (value as (prev: T) => T)(prevState);
-      }
-      return value;
+      const nextState =
+        typeof value === 'function'
+          ? (value as (prev: T) => T)(prevState)
+          : value;
+      // Écriture immédiate (mobile : l’onglet peut être suspendu avant le useEffect)
+      persist(nextState);
+      return nextState;
     });
   };
 

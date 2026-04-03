@@ -20,12 +20,18 @@ export const EntryForm = ({ cagnottes, currency, onSubmit }: EntryFormProps) => 
   const [label, setLabel] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  // Pré-sélectionner la première cagnotte si disponible
+  // Synchroniser avec la liste (première cagnotte au chargement ; corriger si l’id n’existe plus)
   useEffect(() => {
-    if (cagnottes.length > 0 && !selectedCagnotteId) {
-      setSelectedCagnotteId(cagnottes[0].id);
+    if (cagnottes.length === 0) {
+      setSelectedCagnotteId('');
+      return;
     }
-  }, [cagnottes, selectedCagnotteId]);
+    setSelectedCagnotteId((prev) => {
+      if (prev === '') return cagnottes[0].id;
+      if (cagnottes.some((c) => c.id === prev)) return prev;
+      return cagnottes[0].id;
+    });
+  }, [cagnottes]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

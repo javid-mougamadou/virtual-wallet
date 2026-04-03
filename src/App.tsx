@@ -10,8 +10,30 @@ import {
 } from './components';
 import { usePersistentState } from './hooks/usePersistentState';
 import { usePageTracking, useAnalytics } from './hooks/useAnalytics';
-import { Cagnotte, Entry, Currency, EntryType } from './types';
+import { Cagnotte, Entry, Currency, CurrencyPair, EntryType } from './types';
 import { generateId } from './utils/id';
+
+function deserializeCurrency(raw: string): Currency {
+  try {
+    const v = JSON.parse(raw) as string;
+    if (v === 'JPY') return 'YEN';
+    if (v === 'EUR' || v === 'CAD' || v === 'YEN') return v;
+  } catch {
+    // ignore
+  }
+  return 'EUR';
+}
+
+function deserializeCurrencyPair(raw: string): CurrencyPair {
+  try {
+    const v = JSON.parse(raw) as string;
+    if (v === 'EUR-JPY') return 'EUR-YEN';
+    if (v === 'EUR-CAD' || v === 'EUR-YEN') return v;
+  } catch {
+    // ignore
+  }
+  return 'EUR-CAD';
+}
 
 const App = () => {
   const [cagnottes, setCagnottes, resetCagnottes] = usePersistentState<Cagnotte[]>({
@@ -25,6 +47,12 @@ const App = () => {
   const [currency, setCurrency] = usePersistentState<Currency>({
     key: 'virtualwallet.currency-v1',
     defaultValue: 'EUR',
+    deserialize: deserializeCurrency,
+  });
+  const [currencyPair, setCurrencyPair] = usePersistentState<CurrencyPair>({
+    key: 'virtualwallet.currency-pair-v1',
+    defaultValue: 'EUR-CAD',
+    deserialize: deserializeCurrencyPair,
   });
   const [theme, setTheme] = usePersistentState<'light' | 'dark'>({
     key: 'virtualwallet.theme-v1',
@@ -42,6 +70,13 @@ const App = () => {
       document.documentElement.setAttribute('data-theme', theme);
     }
   }, [theme]);
+
+  const quotedForPair = currencyPair === 'EUR-CAD' ? 'CAD' : 'YEN';
+  useEffect(() => {
+    if (currency !== 'EUR' && currency !== quotedForPair) {
+      setCurrency('EUR');
+    }
+  }, [currency, quotedForPair, setCurrency]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -163,13 +198,19 @@ const App = () => {
     <main className="flex min-h-screen w-full flex-col items-center px-4 py-12">
       <section className="w-full max-w-5xl space-y-8 rounded-3xl border border-base-300 bg-base-100 p-8 shadow-2xl">
         <HeaderSection
+          currencyPair={currencyPair}
+          onCurrencyPairChange={setCurrencyPair}
           currency={currency}
           onCurrencyChange={setCurrency}
           theme={theme}
           onToggleTheme={toggleTheme}
         />
 
-        <TotalSummary totalAmount={totalAmount} currency={currency} />
+        <TotalSummary
+          totalAmount={totalAmount}
+          currency={currency}
+          currencyPair={currencyPair}
+        />
 
         <CagnotteSection
           cagnottes={cagnottes}

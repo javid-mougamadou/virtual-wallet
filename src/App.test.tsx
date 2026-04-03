@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, beforeEach } from 'vitest';
 import App from './App';
 
@@ -27,7 +27,7 @@ describe('App', () => {
     // Remplir le formulaire
     const nameInput = screen.getByLabelText(/nom de la cagnotte/i);
     const amountInput = screen.getByLabelText(/montant initial/i);
-    const submitButton = screen.getByRole('button', { name: /créer/i });
+    const submitButton = screen.getByRole('button', { name: /^Créer$/ });
 
     fireEvent.change(nameInput, { target: { value: 'Test Cagnotte' } });
     fireEvent.change(amountInput, { target: { value: '1000' } });
@@ -48,7 +48,7 @@ describe('App', () => {
 
     const nameInput = screen.getByLabelText(/nom de la cagnotte/i);
     const amountInput = screen.getByLabelText(/montant initial/i);
-    const submitButton = screen.getByRole('button', { name: /créer/i });
+    const submitButton = screen.getByRole('button', { name: /^Créer$/ });
 
     fireEvent.change(nameInput, { target: { value: 'Test' } });
     fireEvent.change(amountInput, { target: { value: '1000' } });
@@ -58,16 +58,27 @@ describe('App', () => {
       expect(screen.getByText('Test')).toBeInTheDocument();
     });
 
-    // Ajouter une dépense via le formulaire
-    const amountField = screen.getByLabelText(/montant/i);
-    const addButton = screen.getByRole('button', { name: /ajouter/i });
+    const entrySection = screen.getByRole('heading', { name: /ajouter une entrée/i }).closest('section')!;
+    const entryToggle = within(entrySection).getByRole('button');
+    if (entryToggle.getAttribute('aria-label') === 'Développer') {
+      fireEvent.click(entryToggle);
+    }
+
+    await waitFor(() => {
+      expect(screen.getByLabelText(/montant \(eur\)/i)).toBeInTheDocument();
+    });
+
+    const amountField = screen.getByLabelText(/montant \(eur\)/i);
+    const addButton = screen.getByRole('button', { name: /^Ajouter$/ });
 
     fireEvent.change(amountField, { target: { value: '100' } });
     fireEvent.click(addButton);
 
-    // Vérifier que le solde a changé
+    const totalPanel = screen.getByRole('heading', { name: /total des soldes actuels/i }).closest('section')!;
     await waitFor(() => {
-      expect(screen.getByText(/900/)).toBeInTheDocument();
+      const primary = totalPanel.querySelector('.text-4xl');
+      expect(primary).toBeTruthy();
+      expect(primary).toHaveTextContent(/900/);
     });
   });
 });

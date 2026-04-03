@@ -1,4 +1,6 @@
-export type Currency = 'EUR' | 'CAD';
+export type Currency = 'EUR' | 'CAD' | 'YEN';
+
+export type CurrencyPair = 'EUR-CAD' | 'EUR-YEN';
 
 export type EntryType = 'depense' | 'recette';
 
