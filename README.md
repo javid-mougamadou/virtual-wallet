@@ -126,6 +126,6 @@ npm install -g localtunnel
 - HTTP/HTTPS requests are displayed in the terminal with `--print-requests`
 - For production use, use a service like ngrok (paid) or a VPS
 
-## Author
+## Contact
 
-Created by [Javid Mougamadou](https://javid-mougamadou.pro/)
+**Contact :** **Javid Mougamadou** — [Site web](https://javid-mougamadou.pro/) · [GitHub](https://github.com/javid-mougamadou) · [LinkedIn](https://www.linkedin.com/in/mougamadoujavid/) · [Discord](https://discord.gg/8rK6CKGb) · [Email](mailto:javid.mougamadou2@gmail.com)
